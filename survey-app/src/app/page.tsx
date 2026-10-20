@@ -898,22 +898,13 @@ function BookingFunnelContent() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="fld0dG_nav">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep(3)}
-                    className="fld0dG_ghost"
-                    disabled={isSubmitting}
-                  >
-                    ← Back to Schedule
-                  </button>
-
+                {/* Action Button */}
+                <div style={{ display: "flex", justifyContent: "center", paddingTop: "var(--space-md)" }}>
                   <button
                     type="submit"
                     className="fld0dG_primary"
                     disabled={isSubmitting}
-                    style={{ minWidth: "220px" }}
+                    style={{ width: "100%", minHeight: "54px", fontSize: "1.0625rem" }}
                   >
                     {isSubmitting ? (
                       <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
