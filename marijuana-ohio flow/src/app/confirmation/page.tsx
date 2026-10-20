@@ -1,13 +1,13 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { SERVICES_CATALOG, PHYSICIANS_ROSTER } from "@/lib/bookingData";
+import { Header } from "@/components/common/Header";
+import { Footer } from "@/components/common/Footer";
 
 function ConfirmationContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const bookingId = searchParams.get("bookingId") || "MMJ-OH-89241";
   const serviceKey = (searchParams.get("service") as "new" | "renew") || "new";
@@ -22,6 +22,24 @@ function ConfirmationContent() {
   const physician =
     PHYSICIANS_ROSTER.find((d) => d.id === doctorId) || PHYSICIANS_ROSTER[0];
 
+  const statusBadge = (
+    <span className="fld0dG_timer" role="status" style={{ background: "var(--green-50)", color: "var(--green-600)" }}>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+      <strong style={{ color: "var(--green-600)" }}>Payment Confirmed</strong>
+    </span>
+  );
+
   return (
     <div className="fld0dG_funnel">
       <a href="#main" className="skip">
@@ -29,45 +47,7 @@ function ConfirmationContent() {
       </a>
 
       {/* Header */}
-      <header className="fld0dG_fHead">
-        <Link href="/" className="fld0dG_brand">
-          <svg
-            width="32"
-            height="32"
-            viewBox="8 8 84 84"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M45 45 C20 44 11 27 13 10 C31 8 46 19 45 45 Z M45 55 C20 54 9 71 10 89 C29 91 45 79 45 55 Z M55 55 C54 80 71 91 89 90 C91 71 79 55 55 55 Z"
-              fill="var(--teal-600)"
-            />
-            <path
-              d="M55 45 C54 20 71 9 89 10 C91 29 79 45 55 45 Z"
-              fill="var(--sun-400)"
-            />
-          </svg>
-          <span>Marijuana Card OH</span>
-        </Link>
-
-        <span className="fld0dG_timer" role="status" style={{ background: "var(--green-50)", color: "var(--green-600)" }}>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-          <strong style={{ color: "var(--green-600)" }}>Payment Confirmed</strong>
-        </span>
-
-        <span />
-      </header>
+      <Header showTimer={false} statusBadge={statusBadge} />
 
       {/* Main Stage */}
       <div id="main" className="fld0dG_stage">
@@ -237,19 +217,7 @@ function ConfirmationContent() {
       </div>
 
       {/* Footer */}
-      <footer className="fld0dG_fFoot">
-        <p>
-          © 2026 Marijuana Card OH ·{" "}
-          <a href="#privacy" onClick={(e) => e.preventDefault()}>
-            Privacy
-          </a>{" "}
-          ·{" "}
-          <a href="#terms" onClick={(e) => e.preventDefault()}>
-            Terms
-          </a>
-        </p>
-        <p>In crisis? Call or text 988. In an emergency, call 911.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
