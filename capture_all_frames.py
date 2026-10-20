@@ -63,8 +63,14 @@ async def capture_frames():
         # Fill card details for demo
         await page.locator("button:has-text('Auto-Fill Test Card')").click()
         await page.wait_for_timeout(300)
+
+        # Apply promo code OHIO20
+        await page.locator("#promo-code").fill("OHIO20")
+        await page.locator("button:has-text('Apply')").click()
+        await page.wait_for_timeout(400)
+
         await page.screenshot(path="frame_4_checkout_filled.png", full_page=True)
-        print("Saved frame_4_checkout_filled.png")
+        print("Saved frame_4_checkout_filled.png (with promo code applied)")
 
         # Submit payment and wait for navigation to Frame 5
         await page.locator("button:has-text('Pay $')").click()

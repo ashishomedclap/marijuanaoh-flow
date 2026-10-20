@@ -42,6 +42,12 @@ function BookingFunnelContent() {
   const [zipCode, setZipCode] = useState("");
   const [consentGiven, setConsentGiven] = useState(false);
 
+  // Promo code state
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discount: number } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoSuccess, setPromoSuccess] = useState<string | null>(null);
+
   // Submission / Loading / Error states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -60,6 +66,41 @@ function BookingFunnelContent() {
   const formattedTime = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
   const currentService = SERVICES_CATALOG[selectedServiceId];
+  const discountAmount = appliedPromo ? appliedPromo.discount : 0;
+  const finalTotal = Math.max(0, currentService.total - discountAmount);
+
+  const handleApplyPromo = () => {
+    const cleanCode = promoCodeInput.trim().toUpperCase();
+    if (!cleanCode) {
+      setPromoError("Please enter a promo code.");
+      setPromoSuccess(null);
+      return;
+    }
+
+    if (cleanCode === "OHIO20" || cleanCode === "SAVE20") {
+      setAppliedPromo({ code: cleanCode, discount: 20 });
+      setPromoSuccess(`Promo code "${cleanCode}" applied! $20.00 saved.`);
+      setPromoError(null);
+    } else if (cleanCode === "SAVE10" || cleanCode === "MMJ10") {
+      setAppliedPromo({ code: cleanCode, discount: 10 });
+      setPromoSuccess(`Promo code "${cleanCode}" applied! $10.00 saved.`);
+      setPromoError(null);
+    } else if (cleanCode === "OHIO15" || cleanCode === "SPECIAL15") {
+      setAppliedPromo({ code: cleanCode, discount: 15 });
+      setPromoSuccess(`Promo code "${cleanCode}" applied! $15.00 saved.`);
+      setPromoError(null);
+    } else {
+      setPromoError(`Code "${cleanCode}" is invalid or expired. Try "OHIO20" for $20 off.`);
+      setPromoSuccess(null);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoCodeInput("");
+    setPromoSuccess(null);
+    setPromoError(null);
+  };
 
   // Helper for demo payment autofill
   const handleFillDemoPayment = () => {
@@ -99,6 +140,7 @@ function BookingFunnelContent() {
         time: selectedSlot.time,
         name: patientName,
         email: patientEmail,
+        paid: finalTotal.toString(),
       });
 
       // Navigate to the confirmation screen URL slug
@@ -597,10 +639,100 @@ function BookingFunnelContent() {
                     <span className="free_tag">Included</span>
                   </div>
 
+                  {appliedPromo && (
+                    <div className="summary_item" style={{ color: "var(--green-600)", fontWeight: 700 }}>
+                      <span>Promo Discount ({appliedPromo.code})</span>
+                      <span>-${appliedPromo.discount}.00</span>
+                    </div>
+                  )}
+
                   <div className="summary_item total">
                     <span>Total Due Today</span>
-                    <span>${currentService.total}.00</span>
+                    <span>${finalTotal}.00</span>
                   </div>
+                </div>
+
+                {/* Promo Code Input & Apply Field */}
+                <div
+                  style={{
+                    background: "var(--color-bg-surface)",
+                    border: "1.5px dashed var(--color-border-strong)",
+                    borderRadius: "var(--radius-md)",
+                    padding: "var(--space-md) var(--space-lg)",
+                    display: "grid",
+                    gap: "var(--space-xs)",
+                  }}
+                >
+                  <label
+                    htmlFor="promo-code"
+                    style={{
+                      fontSize: "0.875rem",
+                      fontWeight: 700,
+                      color: "var(--color-text-brand)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                    Have a Promo Code?
+                  </label>
+
+                  <div style={{ display: "flex", gap: "var(--space-sm)", marginTop: "2px" }}>
+                    <input
+                      id="promo-code"
+                      type="text"
+                      className="fld0dG_input"
+                      placeholder="Enter promo code (e.g. OHIO20)"
+                      value={promoCodeInput}
+                      onChange={(e) => {
+                        setPromoCodeInput(e.target.value);
+                        setPromoError(null);
+                      }}
+                      disabled={!!appliedPromo}
+                      style={{
+                        minHeight: "44px",
+                        textTransform: "uppercase",
+                        fontWeight: 700,
+                        letterSpacing: "0.05em",
+                        flex: 1,
+                      }}
+                    />
+
+                    {appliedPromo ? (
+                      <button
+                        type="button"
+                        onClick={handleRemovePromo}
+                        className="fld0dG_ghost"
+                        style={{ minHeight: "44px", color: "var(--color-status-error)", fontWeight: 700 }}
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleApplyPromo}
+                        className="fld0dG_primary"
+                        style={{ minHeight: "44px", padding: "0 var(--space-lg)", fontSize: "0.9375rem" }}
+                      >
+                        Apply
+                      </button>
+                    )}
+                  </div>
+
+                  {promoSuccess && (
+                    <div style={{ fontSize: "0.8125rem", color: "var(--green-600)", fontWeight: 700, marginTop: "4px" }}>
+                      ✓ {promoSuccess}
+                    </div>
+                  )}
+
+                  {promoError && (
+                    <div style={{ fontSize: "0.8125rem", color: "var(--color-status-error)", fontWeight: 600, marginTop: "4px" }}>
+                      ✕ {promoError}
+                    </div>
+                  )}
                 </div>
 
                 {/* Error Banner */}
@@ -800,7 +932,7 @@ function BookingFunnelContent() {
                         Verifying Payment...
                       </span>
                     ) : (
-                      `Pay $${currentService.total}.00 & Confirm Appointment`
+                      `Pay $${finalTotal}.00 & Confirm Appointment`
                     )}
                   </button>
                 </div>

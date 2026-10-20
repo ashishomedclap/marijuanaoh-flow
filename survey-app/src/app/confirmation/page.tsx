@@ -16,6 +16,7 @@ function ConfirmationContent() {
   const timeSlot = searchParams.get("time") || "2:30 PM";
   const patientName = searchParams.get("name") || "Valued Patient";
   const patientEmail = searchParams.get("email") || "patient@example.com";
+  const paidAmount = searchParams.get("paid") || (SERVICES_CATALOG[serviceKey] || SERVICES_CATALOG.new).total.toString();
 
   const service = SERVICES_CATALOG[serviceKey] || SERVICES_CATALOG.new;
   const physician =
@@ -108,7 +109,7 @@ function ConfirmationContent() {
 
                 <p className="fld0dG_subtitle" style={{ textAlign: "center", maxWidth: "34rem" }}>
                   Your appointment has been booked and your payment of{" "}
-                  <strong>${service.total}.00</strong> was verified successfully. A confirmation receipt
+                  <strong>${paidAmount}.00</strong> was verified successfully. A confirmation receipt
                   and your private telehealth video link were sent to{" "}
                   <strong>{patientEmail}</strong>.
                 </p>
@@ -173,48 +174,32 @@ function ConfirmationContent() {
                       {service.title}
                     </div>
                     <div style={{ fontSize: "0.8125rem", color: "var(--green-600)", fontWeight: 600 }}>
-                      Paid: ${service.total}.00 (No state fee · 100% money back guarantee)
+                      Paid: ${paidAmount}.00 (No state fee · 100% money back guarantee)
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Action Button */}
               <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-md)", justifyContent: "center" }}>
                 <a
-                  href={`https://telehealth.marijuanacardoh.com/visit/${bookingId}`}
+                  href={`https://portal.marijuanacardoh.com/patient/${bookingId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="fld0dG_primary"
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: "none", minWidth: "220px" }}
                   onClick={(e) => {
                     e.preventDefault();
-                    alert(`Telehealth room ${bookingId} will open 10 minutes prior to your appointment time (${timeSlot}). A direct link has also been emailed to ${patientEmail}.`);
+                    alert(`Redirecting to patient portal for appointment ${bookingId}. Details have also been emailed to ${patientEmail}.`);
                   }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polygon points="23 7 16 12 23 17 23 7" />
-                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
                   </svg>
-                  Join Telehealth Room
+                  Go to the portal
                 </a>
-
-                <button
-                  type="button"
-                  className="fld0dG_ghost"
-                  style={{ border: "1.5px solid var(--teal-300)", borderRadius: "var(--radius-full)", textDecoration: "none" }}
-                  onClick={() => {
-                    alert(`Appointment ${bookingId} added to your calendar for ${dateFormatted} at ${timeSlot}!`);
-                  }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                  Add to Calendar (.ics)
-                </button>
               </div>
 
               {/* What happens next section */}
@@ -245,17 +230,6 @@ function ConfirmationContent() {
                     </div>
                   </li>
                 </ul>
-              </div>
-
-              {/* Back to Home Navigation */}
-              <div style={{ textAlign: "center", paddingTop: "var(--space-md)" }}>
-                <button
-                  type="button"
-                  onClick={() => router.push("/")}
-                  className="fld0dG_ghost"
-                >
-                  ← Book Another Appointment or Return Home
-                </button>
               </div>
             </div>
           </div>
