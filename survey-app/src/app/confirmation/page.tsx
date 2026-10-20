@@ -1,0 +1,295 @@
+"use client";
+
+import React, { Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { SERVICES_CATALOG, PHYSICIANS_ROSTER } from "@/lib/bookingData";
+
+function ConfirmationContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const bookingId = searchParams.get("bookingId") || "MMJ-OH-89241";
+  const serviceKey = (searchParams.get("service") as "new" | "renew") || "new";
+  const doctorId = searchParams.get("doctor") || "dr-miller";
+  const dateFormatted = searchParams.get("date") || "Today, October 20, 2026";
+  const timeSlot = searchParams.get("time") || "2:30 PM";
+  const patientName = searchParams.get("name") || "Valued Patient";
+  const patientEmail = searchParams.get("email") || "patient@example.com";
+
+  const service = SERVICES_CATALOG[serviceKey] || SERVICES_CATALOG.new;
+  const physician =
+    PHYSICIANS_ROSTER.find((d) => d.id === doctorId) || PHYSICIANS_ROSTER[0];
+
+  return (
+    <div className="fld0dG_funnel">
+      <a href="#main" className="skip">
+        Skip to content
+      </a>
+
+      {/* Header */}
+      <header className="fld0dG_fHead">
+        <Link href="/" className="fld0dG_brand">
+          <svg
+            width="32"
+            height="32"
+            viewBox="8 8 84 84"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M45 45 C20 44 11 27 13 10 C31 8 46 19 45 45 Z M45 55 C20 54 9 71 10 89 C29 91 45 79 45 55 Z M55 55 C54 80 71 91 89 90 C91 71 79 55 55 55 Z"
+              fill="var(--teal-600)"
+            />
+            <path
+              d="M55 45 C54 20 71 9 89 10 C91 29 79 45 55 45 Z"
+              fill="var(--sun-400)"
+            />
+          </svg>
+          <span>Marijuana Card OH</span>
+        </Link>
+
+        <span className="fld0dG_timer" role="status" style={{ background: "var(--green-50)", color: "var(--green-600)" }}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <strong style={{ color: "var(--green-600)" }}>Payment Confirmed</strong>
+        </span>
+
+        <span />
+      </header>
+
+      {/* Main Stage */}
+      <div id="main" className="fld0dG_stage">
+        <div className="fld0dG_shell">
+          <div className="fld0dG_main">
+            {/* Step indicator */}
+            <div className="fld0dG_progress" aria-label="Step 4 of 4: Completed">
+              <div className="fld0dG_bar">
+                <span style={{ width: "100%", background: "var(--green-600)" }} />
+              </div>
+              <p className="fld0dG_stepOf" style={{ color: "var(--green-600)", fontWeight: 700 }}>
+                Step 4 of 4 · Booking & Payment Complete
+              </p>
+            </div>
+
+            {/* Confirmation Card */}
+            <div className="fld0dG_card" style={{ gap: "var(--space-xl)" }}>
+              <div className="fld0dG_done">
+                <div className="fld0dG_doneIcon">
+                  <svg
+                    width="36"
+                    height="36"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+
+                <span className="confirm_badge">CONFIRMATION #{bookingId}</span>
+
+                <h1 className="fld0dG_q" style={{ textAlign: "center" }}>
+                  You&apos;re all set, {patientName}!
+                </h1>
+
+                <p className="fld0dG_subtitle" style={{ textAlign: "center", maxWidth: "34rem" }}>
+                  Your appointment has been booked and your payment of{" "}
+                  <strong>${service.total}.00</strong> was verified successfully. A confirmation receipt
+                  and your private telehealth video link were sent to{" "}
+                  <strong>{patientEmail}</strong>.
+                </p>
+              </div>
+
+              {/* Appointment Details Box */}
+              <div className="booking_details_box">
+                <div className="detail_row">
+                  <div className="detail_icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", fontWeight: 700 }}>
+                      DATE & TIME
+                    </div>
+                    <div style={{ fontSize: "1.0625rem", fontWeight: 800, color: "var(--color-text-brand)" }}>
+                      {dateFormatted} at {timeSlot} (EDT)
+                    </div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--teal-600)" }}>
+                      Telehealth Video Call (10-15 minutes)
+                    </div>
+                  </div>
+                </div>
+
+                <div className="detail_row">
+                  <div className="detail_icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", fontWeight: 700 }}>
+                      LICENSED PHYSICIAN
+                    </div>
+                    <div style={{ fontSize: "1.0625rem", fontWeight: 800, color: "var(--color-text-brand)" }}>
+                      {physician.name}
+                    </div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)" }}>
+                      {physician.boardNumber} · {physician.credentials}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="detail_row">
+                  <div className="detail_icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", fontWeight: 700 }}>
+                      SERVICE SELECTED & PAYMENT
+                    </div>
+                    <div style={{ fontSize: "1.0625rem", fontWeight: 800, color: "var(--color-text-brand)" }}>
+                      {service.title}
+                    </div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--green-600)", fontWeight: 600 }}>
+                      Paid: ${service.total}.00 (No state fee · 100% money back guarantee)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-md)", justifyContent: "center" }}>
+                <a
+                  href={`https://telehealth.marijuanacardoh.com/visit/${bookingId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fld0dG_primary"
+                  style={{ textDecoration: "none" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    alert(`Telehealth room ${bookingId} will open 10 minutes prior to your appointment time (${timeSlot}). A direct link has also been emailed to ${patientEmail}.`);
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="23 7 16 12 23 17 23 7" />
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                  </svg>
+                  Join Telehealth Room
+                </a>
+
+                <button
+                  type="button"
+                  className="fld0dG_ghost"
+                  style={{ border: "1.5px solid var(--teal-300)", borderRadius: "var(--radius-full)", textDecoration: "none" }}
+                  onClick={() => {
+                    alert(`Appointment ${bookingId} added to your calendar for ${dateFormatted} at ${timeSlot}!`);
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  Add to Calendar (.ics)
+                </button>
+              </div>
+
+              {/* What happens next section */}
+              <div style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "var(--space-lg)" }}>
+                <p className="fld0dG_kicker" style={{ marginBottom: "var(--space-md)" }}>
+                  WHAT HAPPENS NEXT
+                </p>
+                <ul className="fld0dG_prep">
+                  <li>
+                    <span className="step_number">1</span>
+                    <div>
+                      <strong>Check your email for the video link:</strong> We&apos;ve sent your meeting URL and
+                      pre-consultation guide to <strong>{patientEmail}</strong>.
+                    </div>
+                  </li>
+                  <li>
+                    <span className="step_number">2</span>
+                    <div>
+                      <strong>Connect from any device:</strong> Smartphone, iPad, tablet, or desktop computer with a
+                      camera and microphone. No app download required.
+                    </div>
+                  </li>
+                  <li>
+                    <span className="step_number">3</span>
+                    <div>
+                      <strong>Brief 10-15 minute visit:</strong> {physician.name} will discuss your medical history,
+                      symptoms, and qualify you for the Ohio Medical Marijuana Control Program.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Back to Home Navigation */}
+              <div style={{ textAlign: "center", paddingTop: "var(--space-md)" }}>
+                <button
+                  type="button"
+                  onClick={() => router.push("/")}
+                  className="fld0dG_ghost"
+                >
+                  ← Book Another Appointment or Return Home
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="fld0dG_fFoot">
+        <p>
+          © 2026 Marijuana Card OH ·{" "}
+          <a href="#privacy" onClick={(e) => e.preventDefault()}>
+            Privacy
+          </a>{" "}
+          ·{" "}
+          <a href="#terms" onClick={(e) => e.preventDefault()}>
+            Terms
+          </a>
+        </p>
+        <p>In crisis? Call or text 988. In an emergency, call 911.</p>
+      </footer>
+    </div>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ display: "grid", placeItems: "center", minHeight: "100vh", fontFamily: "var(--font-body)" }}>
+          <p>Loading your confirmation details...</p>
+        </div>
+      }
+    >
+      <ConfirmationContent />
+    </Suspense>
+  );
+}
