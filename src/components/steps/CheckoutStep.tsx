@@ -1,11 +1,12 @@
 import React from "react";
-import { ServicePlan, Physician, DaySchedule, Slot } from "@/lib/bookingData";
+import { ServicePlan, Physician, DaySchedule, Slot, ConsultationMode } from "@/lib/bookingData";
 
 interface CheckoutStepProps {
   currentService: ServicePlan;
   selectedPhysician: Physician;
   selectedDay: DaySchedule;
   selectedSlot: Slot;
+  consultationMode: ConsultationMode;
   finalTotal: number;
   // Patient details
   patientName: string;
@@ -42,6 +43,7 @@ export function CheckoutStep({
   selectedPhysician,
   selectedDay,
   selectedSlot,
+  consultationMode,
   finalTotal,
   patientName,
   patientPhone,
@@ -110,7 +112,7 @@ export function CheckoutStep({
               {currentService.title}
             </strong>
             <div style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)" }}>
-              {selectedPhysician.name} · {selectedDay.fullDateFormatted} at {selectedSlot.time} EDT
+              {selectedPhysician.name} · {selectedDay.fullDateFormatted} at {selectedSlot.time} EDT ({consultationMode === "phone" ? "Phone Call" : "Video Call"})
             </div>
           </div>
           <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--color-text-brand)" }}>
@@ -119,7 +121,7 @@ export function CheckoutStep({
         </div>
 
         <div className="summary_item">
-          <span>Telehealth Video Consultation</span>
+          <span>Telehealth {consultationMode === "phone" ? "Phone" : "Video"} Consultation</span>
           <span>${currentService.price}.00</span>
         </div>
 
@@ -264,7 +266,10 @@ export function CheckoutStep({
           <div>
             <strong>Patient:</strong> {patientName} · {patientPhone}
             <div style={{ color: "var(--color-text-secondary)", fontSize: "0.8125rem" }}>
-              Video link & receipt will be sent to <strong>{patientEmail}</strong>
+              {consultationMode === "phone"
+                ? `Doctor will call ${patientPhone} · Receipt sent to `
+                : "Video room link & receipt will be sent to "}
+              <strong>{patientEmail}</strong>
             </div>
           </div>
         </div>

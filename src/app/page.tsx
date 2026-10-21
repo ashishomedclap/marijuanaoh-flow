@@ -10,6 +10,7 @@ import {
   Physician,
   DaySchedule,
   Slot,
+  ConsultationMode,
 } from "@/lib/bookingData";
 
 import { Header } from "@/components/common/Header";
@@ -38,6 +39,7 @@ function BookingFunnelContent() {
   const [availableDays] = useState<DaySchedule[]>(DEFAULT_DAYS);
   const [selectedDay, setSelectedDay] = useState<DaySchedule>(DEFAULT_DAYS[0]);
   const [selectedSlot, setSelectedSlot] = useState<Slot>(TIME_SLOTS[5]); // Default 2:30 PM
+  const [consultationMode, setConsultationMode] = useState<ConsultationMode | null>(null);
 
   // Pre-filled from intake survey responses
   const [patientName] = useState("Sarah Jenkins");
@@ -146,8 +148,10 @@ function BookingFunnelContent() {
         doctor: selectedPhysician.id,
         date: selectedDay.fullDateFormatted,
         time: selectedSlot.time,
+        mode: consultationMode || "video",
         name: patientName,
         email: patientEmail,
+        phone: patientPhone,
         paid: finalTotal.toString(),
       });
 
@@ -205,6 +209,9 @@ function BookingFunnelContent() {
                 selectedDay={selectedDay}
                 selectedSlot={selectedSlot}
                 currentService={currentService}
+                consultationMode={consultationMode}
+                patientPhone={patientPhone}
+                onSelectConsultationMode={setConsultationMode}
                 onSelectDay={setSelectedDay}
                 onSelectSlot={setSelectedSlot}
                 onBack={() => setCurrentStep(2)}
@@ -219,6 +226,7 @@ function BookingFunnelContent() {
                 selectedPhysician={selectedPhysician}
                 selectedDay={selectedDay}
                 selectedSlot={selectedSlot}
+                consultationMode={consultationMode || "video"}
                 finalTotal={finalTotal}
                 patientName={patientName}
                 patientPhone={patientPhone}

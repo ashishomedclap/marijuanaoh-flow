@@ -1,3 +1,5 @@
+export type ConsultationMode = "video" | "phone";
+
 export interface ServicePlan {
   id: "new" | "renew";
   title: string;

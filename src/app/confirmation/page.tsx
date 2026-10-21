@@ -14,8 +14,10 @@ function ConfirmationContent() {
   const doctorId = searchParams.get("doctor") || "dr-miller";
   const dateFormatted = searchParams.get("date") || "Today, October 20, 2026";
   const timeSlot = searchParams.get("time") || "2:30 PM";
+  const mode = (searchParams.get("mode") as "video" | "phone") || "video";
   const patientName = searchParams.get("name") || "Valued Patient";
   const patientEmail = searchParams.get("email") || "patient@example.com";
+  const patientPhone = searchParams.get("phone") || "(614) 555-0192";
   const paidAmount = searchParams.get("paid") || (SERVICES_CATALOG[serviceKey] || SERVICES_CATALOG.new).total.toString();
 
   const service = SERVICES_CATALOG[serviceKey] || SERVICES_CATALOG.new;
@@ -89,9 +91,18 @@ function ConfirmationContent() {
 
                 <p className="fld0dG_subtitle" style={{ textAlign: "center", maxWidth: "34rem" }}>
                   Your appointment has been booked and your payment of{" "}
-                  <strong>${paidAmount}.00</strong> was verified successfully. A confirmation receipt
-                  and your private telehealth video link were sent to{" "}
-                  <strong>{patientEmail}</strong>.
+                  <strong>${paidAmount}.00</strong> was verified successfully.{" "}
+                  {mode === "phone" ? (
+                    <>
+                      A receipt has been sent to <strong>{patientEmail}</strong>. Your doctor will call you directly at{" "}
+                      <strong>{patientPhone}</strong> at your scheduled time.
+                    </>
+                  ) : (
+                    <>
+                      A confirmation receipt and your private telehealth video link were sent to{" "}
+                      <strong>{patientEmail}</strong>.
+                    </>
+                  )}
                 </p>
               </div>
 
@@ -113,8 +124,8 @@ function ConfirmationContent() {
                     <div style={{ fontSize: "1.0625rem", fontWeight: 800, color: "var(--color-text-brand)" }}>
                       {dateFormatted} at {timeSlot} (EDT)
                     </div>
-                    <div style={{ fontSize: "0.8125rem", color: "var(--teal-600)" }}>
-                      Telehealth Video Call (10-15 minutes)
+                    <div style={{ fontSize: "0.8125rem", color: "var(--teal-600)", fontWeight: 600 }}>
+                      Telehealth {mode === "phone" ? `Phone Call (${patientPhone})` : "Video Call (Web Browser)"} · 10-15 minutes
                     </div>
                   </div>
                 </div>
@@ -188,27 +199,55 @@ function ConfirmationContent() {
                   WHAT HAPPENS NEXT
                 </p>
                 <ul className="fld0dG_prep">
-                  <li>
-                    <span className="step_number">1</span>
-                    <div>
-                      <strong>Check your email for the video link:</strong> We&apos;ve sent your meeting URL and
-                      pre-consultation guide to <strong>{patientEmail}</strong>.
-                    </div>
-                  </li>
-                  <li>
-                    <span className="step_number">2</span>
-                    <div>
-                      <strong>Connect from any device:</strong> Smartphone, iPad, tablet, or desktop computer with a
-                      camera and microphone. No app download required.
-                    </div>
-                  </li>
-                  <li>
-                    <span className="step_number">3</span>
-                    <div>
-                      <strong>Brief 10-15 minute visit:</strong> {physician.name} will discuss your medical history,
-                      symptoms, and qualify you for the Ohio Medical Marijuana Control Program.
-                    </div>
-                  </li>
+                  {mode === "phone" ? (
+                    <>
+                      <li>
+                        <span className="step_number">1</span>
+                        <div>
+                          <strong>Expect a phone call at your appointment time:</strong> {physician.name} will call your
+                          phone directly at <strong>{patientPhone}</strong>.
+                        </div>
+                      </li>
+                      <li>
+                        <span className="step_number">2</span>
+                        <div>
+                          <strong>No camera or apps needed:</strong> Ensure your phone has cellular signal and is not on
+                          Silent / Do Not Disturb mode. Find a quiet, comfortable space.
+                        </div>
+                      </li>
+                      <li>
+                        <span className="step_number">3</span>
+                        <div>
+                          <strong>Brief 10-15 minute visit:</strong> {physician.name} will discuss your medical history,
+                          symptoms, and qualify you for the Ohio Medical Marijuana Control Program.
+                        </div>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <span className="step_number">1</span>
+                        <div>
+                          <strong>Check your email for the video link:</strong> We&apos;ve sent your meeting URL and
+                          pre-consultation guide to <strong>{patientEmail}</strong>.
+                        </div>
+                      </li>
+                      <li>
+                        <span className="step_number">2</span>
+                        <div>
+                          <strong>Connect from any device:</strong> Smartphone, iPad, tablet, or desktop computer with a
+                          camera and microphone. No app download required.
+                        </div>
+                      </li>
+                      <li>
+                        <span className="step_number">3</span>
+                        <div>
+                          <strong>Brief 10-15 minute visit:</strong> {physician.name} will discuss your medical history,
+                          symptoms, and qualify you for the Ohio Medical Marijuana Control Program.
+                        </div>
+                      </li>
+                    </>
+                  )}
                 </ul>
               </div>
             </div>
