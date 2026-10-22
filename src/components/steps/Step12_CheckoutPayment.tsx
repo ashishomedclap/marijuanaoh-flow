@@ -36,13 +36,15 @@ interface CheckoutStepProps {
   isSubmitting: boolean;
   errorMessage: string | null;
   onSubmitPayment: (e: React.FormEvent) => void;
+  onBack?: () => void;
 }
 
-export function CheckoutStep({
+export function Step12_CheckoutPayment({
   currentService,
   selectedPhysician,
   selectedDay,
   selectedSlot,
+  onBack,
   consultationMode,
   finalTotal,
   patientName,
@@ -85,18 +87,10 @@ export function CheckoutStep({
         <button
           type="button"
           onClick={onFillDemoPayment}
-          style={{
-            background: "var(--teal-100)",
-            border: "1px dashed var(--teal-600)",
-            color: "var(--teal-800)",
-            padding: "4px 10px",
-            borderRadius: "var(--radius-full)",
-            fontSize: "0.75rem",
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
+          className="btn_autofill"
+          title="Autofill test card details and consent"
         >
-          ⚡ Auto-Fill Test Card Details
+          ⚡ Autofill Test Card Details
         </button>
       </div>
 
@@ -389,12 +383,22 @@ export function CheckoutStep({
       </div>
 
       {/* Action Button */}
-      <div style={{ display: "flex", justifyContent: "center", paddingTop: "var(--space-md)" }}>
+      <div className="fld0dG_nav" style={{ paddingTop: "var(--space-md)" }}>
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="fld0dG_ghost"
+            style={{ paddingLeft: 0, paddingRight: 0 }}
+          >
+            Back
+          </button>
+        )}
         <button
           type="submit"
           className="fld0dG_primary"
           disabled={isSubmitting}
-          style={{ width: "100%", minHeight: "54px", fontSize: "1.0625rem" }}
+          style={{ minHeight: "54px", fontSize: "1.0625rem", flex: 1, maxWidth: onBack ? "360px" : "100%" }}
         >
           {isSubmitting ? (
             <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
@@ -420,3 +424,5 @@ export function CheckoutStep({
     </form>
   );
 }
+
+export const CheckoutStep = Step12_CheckoutPayment;

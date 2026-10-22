@@ -1,18 +1,22 @@
+"use client";
+
 import React from "react";
 import { PHYSICIANS_ROSTER, Physician } from "@/lib/bookingData";
 
 interface PhysicianSelectionStepProps {
-  selectedPhysician: Physician;
-  onSelectPhysician: (physician: Physician) => void;
+  selectedPhysician?: Physician;
+  onSelectPhysician?: (physician: Physician) => void;
   onBack: () => void;
   onContinue: () => void;
+  ctaText?: string;
 }
 
-export function PhysicianSelectionStep({
+export function Step10_PhysicianSelection({
   selectedPhysician,
   onSelectPhysician,
   onBack,
   onContinue,
+  ctaText = "Continue to Choose Date & Time →",
 }: PhysicianSelectionStepProps) {
   return (
     <div className="fld0dG_card">
@@ -21,22 +25,21 @@ export function PhysicianSelectionStep({
         Meet Your Physician
       </h1>
       <p className="fld0dG_subtitle">
-        You will be evaluated by an Ohio State Medical Board licensed physician. Select your
-        preferred doctor or continue with our earliest available specialist.
+        You will be evaluated by Ohio State Medical Board licensed physicians. We have the best doctors in the state, ensuring compassionate, expert, and 100% confidential telehealth care.
       </p>
 
-      <div style={{ display: "grid", gap: "var(--space-md)" }}>
+      {/* Physician Roster Display (No radio selection) */}
+      <div style={{ display: "grid", gap: "var(--space-md)", marginTop: "var(--space-xs)" }}>
         {PHYSICIANS_ROSTER.map((physician) => {
-          const isSelected = selectedPhysician.id === physician.id;
+          const isSelected = selectedPhysician?.id === physician.id;
           return (
             <div
               key={physician.id}
               className={`fld0dG_docCard ${isSelected ? "selectedDoc" : ""}`}
-              onClick={() => onSelectPhysician(physician)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") onSelectPhysician(physician);
+              onClick={() => onSelectPhysician?.(physician)}
+              style={{
+                cursor: onSelectPhysician ? "pointer" : "default",
+                borderColor: isSelected ? "var(--color-action-primary)" : "var(--color-border-default)",
               }}
             >
               <div className="fld0dG_docAvatar">{physician.avatarText}</div>
@@ -47,13 +50,17 @@ export function PhysicianSelectionStep({
                     justifyContent: "space-between",
                     alignItems: "flex-start",
                     flexWrap: "wrap",
-                    gap: "4px",
+                    gap: "6px",
                   }}
                 >
                   <div>
                     <div className="doc_name">{physician.name}</div>
-                    <div className="doc_meta">
-                      {physician.boardNumber} · {physician.credentials}
+                    <div className="doc_meta" style={{ display: "flex", flexWrap: "wrap", gap: "6px", alignItems: "center", marginTop: "2px" }}>
+                      <strong>OH License #{physician.ohioLicense}</strong>
+                      <span>·</span>
+                      <span>NPI: {physician.npi}</span>
+                      <span>·</span>
+                      <span>{physician.credentials}</span>
                     </div>
                   </div>
                   <span className="doc_badge">{physician.badge}</span>
@@ -61,7 +68,7 @@ export function PhysicianSelectionStep({
 
                 <div className="doc_stars">
                   <span>★★★★★</span>
-                  <span style={{ color: "var(--teal-800)" }}>
+                  <span style={{ color: "var(--teal-800)", fontWeight: 700 }}>
                     {physician.rating} ({physician.reviewsCount} reviews)
                   </span>
                 </div>
@@ -88,25 +95,13 @@ export function PhysicianSelectionStep({
                   🟢 {physician.availabilityStatus}
                 </div>
               </div>
-
-              <span
-                className="fld0dG_radio"
-                style={{
-                  borderColor: isSelected
-                    ? "var(--color-action-primary)"
-                    : "var(--color-border-strong)",
-                  background: isSelected
-                    ? "radial-gradient(circle, var(--color-action-primary) 45%, transparent 50%)"
-                    : "transparent",
-                }}
-              />
             </div>
           );
         })}
       </div>
 
-      {/* Guarantee callout */}
-      <div className="fld0dG_guaranteeBox">
+      {/* Guarantee callout matching Screenshot */}
+      <div className="fld0dG_guaranteeBox" style={{ marginTop: "var(--space-sm)" }}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z M9 12l2 2 4-4" />
         </svg>
@@ -117,13 +112,14 @@ export function PhysicianSelectionStep({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="fld0dG_nav">
+      <div className="fld0dG_nav" style={{ marginTop: "auto", paddingTop: "var(--space-lg)" }}>
         <button
           type="button"
           onClick={onBack}
           className="fld0dG_ghost"
+          style={{ paddingLeft: 0, paddingRight: 0 }}
         >
-          ← Back
+          Back
         </button>
 
         <button
@@ -131,9 +127,11 @@ export function PhysicianSelectionStep({
           onClick={onContinue}
           className="fld0dG_primary"
         >
-          Choose Date & Time with {selectedPhysician.name.split(",")[0]} →
+          {ctaText}
         </button>
       </div>
     </div>
   );
 }
+
+export const PhysicianSelectionStep = Step10_PhysicianSelection;

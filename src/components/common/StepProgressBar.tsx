@@ -8,10 +8,10 @@ interface StepProgressBarProps {
 
 export function StepProgressBar({
   currentStep,
-  totalSteps = 4,
+  totalSteps = 12,
   stepTitle,
 }: StepProgressBarProps) {
-  const percentage = Math.round((currentStep / totalSteps) * 100);
+  const percentage = Math.min(100, Math.max(0, Math.round((currentStep / totalSteps) * 100)));
 
   return (
     <div
@@ -22,7 +22,7 @@ export function StepProgressBar({
         <span style={{ width: `${percentage}%` }} />
       </div>
       <p className="fld0dG_stepOf">
-        Step {currentStep} of {totalSteps} · {stepTitle}
+        Step {currentStep} of {totalSteps}
       </p>
     </div>
   );

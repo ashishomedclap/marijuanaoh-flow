@@ -7,11 +7,18 @@ interface ServiceSelectionStepProps {
   onContinue: () => void;
 }
 
-export function ServiceSelectionStep({
+export function Step01_ServiceSelection({
   selectedServiceId,
   onSelectService,
   onContinue,
 }: ServiceSelectionStepProps) {
+  const handleSelectService = (id: "new" | "renew") => {
+    onSelectService(id);
+    setTimeout(() => {
+      onContinue();
+    }, 260);
+  };
+
   return (
     <form
       className="fld0dG_card"
@@ -21,7 +28,7 @@ export function ServiceSelectionStep({
         onContinue();
       }}
     >
-      <p className="fld0dG_kicker">TAKES ABOUT 2 MINUTES</p>
+      <p className="fld0dG_kicker">TAKES ABOUT 5 MINUTES</p>
       <h1 tabIndex={-1} className="fld0dG_q">
         What can we help you with?
       </h1>
@@ -34,7 +41,7 @@ export function ServiceSelectionStep({
             selectedServiceId === "new" ? "fld0dG_selected" : ""
           }`}
           aria-pressed={selectedServiceId === "new"}
-          onClick={() => onSelectService("new")}
+          onClick={() => handleSelectService("new")}
         >
           <span className="fld0dG_choiceIcon">
             <svg
@@ -68,7 +75,7 @@ export function ServiceSelectionStep({
             selectedServiceId === "renew" ? "fld0dG_selected" : ""
           }`}
           aria-pressed={selectedServiceId === "renew"}
-          onClick={() => onSelectService("renew")}
+          onClick={() => handleSelectService("renew")}
         >
           <span className="fld0dG_choiceIcon">
             <svg
@@ -96,17 +103,6 @@ export function ServiceSelectionStep({
         </button>
       </div>
 
-      {/* Continue button */}
-      <div style={{ marginTop: "var(--space-md)" }}>
-        <button
-          type="button"
-          className="fld0dG_primary"
-          style={{ width: "100%" }}
-          onClick={onContinue}
-        >
-          Continue to Physician Selection →
-        </button>
-      </div>
 
       {/* Assurances */}
       <div className="fld0dG_nav">
@@ -161,3 +157,5 @@ export function ServiceSelectionStep({
     </form>
   );
 }
+
+export const ServiceSelectionStep = Step01_ServiceSelection;

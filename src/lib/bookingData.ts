@@ -1,5 +1,33 @@
 export type ConsultationMode = "video" | "phone";
 
+export type DiagnosisStatus = "yes" | "no" | "not_sure";
+export type RecordsStatus = "have_them" | "can_get" | "no_records";
+
+export const QUALIFYING_CONDITIONS = [
+  "Acquired immune deficiency syndrome (AIDS)",
+  "Alzheimer’s disease",
+  "Amyotrophic lateral sclerosis (ALS)",
+  "Cancer",
+  "Chronic traumatic encephalopathy",
+  "Crohn’s disease",
+  "Epilepsy or another seizure disorder",
+  "Fibromyalgia",
+  "Glaucoma",
+  "Hepatitis C",
+  "Inflammatory bowel disease",
+  "Multiple sclerosis",
+  "Pain that is chronic and severe, or intractable",
+  "Parkinson’s disease",
+  "Positive status for HIV",
+  "Post-traumatic stress disorder (PTSD)",
+  "Sickle cell anemia",
+  "Spinal cord disease or injury",
+  "Tourette’s syndrome",
+  "Traumatic brain injury",
+  "Ulcerative colitis",
+  "I’m not sure which applies",
+] as const;
+
 export interface ServicePlan {
   id: "new" | "renew";
   title: string;
@@ -17,6 +45,8 @@ export interface Physician {
   title: string;
   credentials: string;
   boardNumber: string;
+  ohioLicense: string;
+  npi: string;
   rating: number;
   reviewsCount: number;
   avatarText: string;
@@ -64,14 +94,16 @@ export const SERVICES_CATALOG: Record<"new" | "renew", ServicePlan> = {
   },
 };
 
-// Physicians sourced from real clinic roster (referenced in screen 1.html JSON-LD)
+// Physicians sourced from real clinic roster (referenced in official doctor profiles)
 export const PHYSICIANS_ROSTER: Physician[] = [
   {
     id: "dr-miller",
     name: "Dr. Johnathan Miller, MD",
     title: "Ohio State Medical Board Licensed Physician",
     credentials: "MD · Certified to Recommend (CTR)",
-    boardNumber: "OSMB License #35.129482",
+    boardNumber: "OSMB License #35.141126CTR",
+    ohioLicense: "35.141126CTR",
+    npi: "1235623372",
     rating: 4.98,
     reviewsCount: 864,
     avatarText: "JM",
@@ -85,7 +117,9 @@ export const PHYSICIANS_ROSTER: Physician[] = [
     name: "Dr. Kevin Kargman, DO",
     title: "Ohio State Medical Board Licensed Physician",
     credentials: "DO · Certified to Recommend (CTR)",
-    boardNumber: "OSMB License #34.089123",
+    boardNumber: "OSMB License #34.015746CTR",
+    ohioLicense: "34.015746CTR",
+    npi: "1407810302",
     rating: 4.95,
     reviewsCount: 620,
     avatarText: "KK",

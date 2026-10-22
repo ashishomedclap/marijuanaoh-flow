@@ -5,9 +5,17 @@ interface HeaderProps {
   formattedTime?: string;
   showTimer?: boolean;
   statusBadge?: React.ReactNode;
+  onStartOver?: () => void;
+  onTriggerExitModal?: () => void;
 }
 
-export function Header({ formattedTime, showTimer = true, statusBadge }: HeaderProps) {
+export function Header({
+  formattedTime,
+  showTimer = true,
+  statusBadge,
+  onStartOver,
+  onTriggerExitModal,
+}: HeaderProps) {
   return (
     <header className="fld0dG_fHead">
       <Link href="/" className="fld0dG_brand">
@@ -53,7 +61,35 @@ export function Header({ formattedTime, showTimer = true, statusBadge }: HeaderP
         <span />
       )}
 
-      <span />
+      {/* Top Right: Discreet Test / Start Over button & Exit Modal trigger */}
+      <div style={{ justifySelf: "end", display: "flex", alignItems: "center", gap: "8px" }}>
+        {onTriggerExitModal && (
+          <button
+            type="button"
+            onClick={onTriggerExitModal}
+            className="btn_start_over"
+            title="Preview 'Before You Go' Exit Modal"
+            aria-label="Preview exit modal"
+          >
+            <span>Exit Modal</span>
+          </button>
+        )}
+        {onStartOver && (
+          <button
+            type="button"
+            onClick={onStartOver}
+            className="btn_start_over"
+            title="Reset all steps for testing"
+            aria-label="Start over"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span>Start over</span>
+          </button>
+        )}
+      </div>
     </header>
   );
 }

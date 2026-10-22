@@ -26,7 +26,7 @@ interface ScheduleStepProps {
   onContinue: () => void;
 }
 
-export function ScheduleStep({
+export function Step11_ScheduleAppointment({
   selectedPhysician,
   availableDays,
   selectedDay,
@@ -46,6 +46,21 @@ export function ScheduleStep({
   const handleSlotClick = (slot: Slot) => {
     onSelectSlot(slot);
     setValidationError(null);
+    if (!consultationMode) {
+      setTimeout(() => {
+        setIsModalOpen(true);
+      }, 150);
+    }
+  };
+
+  const handleAutofillSchedule = () => {
+    setValidationError(null);
+    onSelectDay(availableDays[0]);
+    onSelectSlot(TIME_SLOTS[5]);
+    onSelectConsultationMode("video");
+    setTimeout(() => {
+      onContinue();
+    }, 280);
   };
 
   const handleProceedClick = () => {
@@ -60,11 +75,25 @@ export function ScheduleStep({
 
   return (
     <div className="fld0dG_card">
-      <p className="fld0dG_kicker">SCHEDULE TELEHEALTH APPOINTMENT</p>
-      <h1 tabIndex={-1} className="fld0dG_q">
-        Choose Date & Time
-      </h1>
-      <p className="fld0dG_subtitle">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", flexWrap: "wrap" }}>
+        <div>
+          <p className="fld0dG_kicker" style={{ margin: 0 }}>SCHEDULE TELEHEALTH APPOINTMENT</p>
+          <h1 tabIndex={-1} className="fld0dG_q" style={{ margin: "4px 0 0 0" }}>
+            Choose Date & Time
+          </h1>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleAutofillSchedule}
+          className="btn_autofill"
+          title="Autofill Today 2:30 PM Video appointment and continue"
+        >
+          ⚡ Autofill (2:30 PM Video)
+        </button>
+      </div>
+
+      <p className="fld0dG_subtitle" style={{ marginTop: "8px" }}>
         Select a convenient 10-15 minute{" "}
         {consultationMode
           ? consultationMode === "phone"
@@ -207,8 +236,9 @@ export function ScheduleStep({
           type="button"
           onClick={onBack}
           className="fld0dG_ghost"
+          style={{ paddingLeft: 0, paddingRight: 0 }}
         >
-          ← Back to Doctors
+          Back
         </button>
 
         <button
@@ -216,7 +246,7 @@ export function ScheduleStep({
           onClick={handleProceedClick}
           className="fld0dG_primary"
         >
-          Proceed to Checkout (${currentService.price}) →
+          Confirm Time & Proceed to Checkout →
         </button>
       </div>
 
@@ -240,3 +270,5 @@ export function ScheduleStep({
     </div>
   );
 }
+
+export const ScheduleStep = Step11_ScheduleAppointment;

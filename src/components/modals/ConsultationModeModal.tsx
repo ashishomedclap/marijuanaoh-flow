@@ -64,6 +64,11 @@ export function ConsultationModeModal({
   const handleCardClick = (mode: ConsultationMode) => {
     setTempMode(mode);
     setValidationError(null);
+    onSelectMode(mode);
+    // Instant confirmation on tap to reduce thumb taps
+    setTimeout(() => {
+      onConfirm(mode);
+    }, 220);
   };
 
   const handleConfirmClick = () => {
